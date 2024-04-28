@@ -86,17 +86,11 @@ https://www.nextron-systems.com/valhalla/
 
 
 
-## wireshark rule
+## wireshark
 
-### 基本符号
+左转到NOTE.md查找wiresahrk的信息
 
-范围： host,net, port and portrange
-方向：  src、dst、src or dst、src and dst，<src是源头,dst是去处>
-协议：  ether、wlan、ip、ip6、arp、rarp、tcp and udp。
-用于捕获端口 80 流量的示例过滤器： tcp port 80
-
-比较运算符和逻辑运算符与C语言相差不大
+## 正则匹配
 
 
-### 高级过滤
 

