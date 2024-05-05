@@ -9,12 +9,14 @@
     - [AlwaysInstallElevated](#alwaysinstallelevated)
     - [一些少见的提权方式](#一些少见的提权方式)
   - [工具使用](#工具使用)
+    - [evil-winrm](#evil-winrm)
     - [john the ripper](#john-the-ripper)
     - [remmina](#remmina)
     - [Nmap](#nmap)
     - [msfvenom](#msfvenom)
     - [wireshark](#wireshark)
     - [hydra](#hydra)
+    - [hashcat](#hashcat)
     - [burpsuit](#burpsuit)
     - [gobuster](#gobuster)
     - [sqlmap](#sqlmap)
@@ -135,6 +137,11 @@ docker run -v /:/mnt --rm -it <FILES> chroot /mnt sh
 
 ## 工具使用
 
+### evil-winrm
+
+windows登录工具：  
+evil-winrm -i IP -u USERNAME -p PASSWORD
+
 ### john the ripper
 
 john [选项] [文件]  
@@ -177,7 +184,7 @@ sudo nmap -sSU -p 53 --script dns-nsid 10.129.2.48（测试过真正能用的）
 --min-rate [NUMBER]
 
 
-
+通常，'-sV' 与 Nmap 一起使用来确定版本，但这并不总是足够的。在这种情况下，请尝试添加“-sC”来运行安全脚本，这是获取版本等内容的另一种好方法。
 
 
 ### msfvenom
@@ -255,6 +262,14 @@ j_username=brute&j_password=brute&from=%2F&Submit=Sign+in
 ``````
 POST/GET后和HTTP/1.1之间是路径，user&pass(不用from和Submit),错误的回复要在页面上找
 
+### hashcat
+
+
+hashcat HASH_FILE
+
+hashcat -m mode HASH_FILE WORDLISTS.txt --fonts
+
+
 ### burpsuit
 
 当需要将修改后的页面呈现到浏览器上时：  
@@ -281,6 +296,24 @@ gobuster dir -u http://MACHINE_IP/ -w /usr/share/wordlists/dirbuster/directory-l
 -X 
 
 ### sqlmap
+
+sqlmap -u "URL"
+
+>其他参数
+
+参数|用法
+|-|-|
+--user-agent="" | 设置用户代理
+--batch |省略输入Y的步骤
+--cookie="" |设置cookie
+-p "" | 指定测试的参数
+-D "" | 指定数据库
+-T "" | 指定表
+-C "" | 指定列
+--dbs | 爆破数据库名
+--tables | 爆破表名
+--columns | 爆破列名
+--dump | 读取指定键的值
 
 ### ffuf
 ffuf -u http://MACHINE_IP/FUZZ -w /usr/share/seclists/Discovery/Web-Content/big.txt
