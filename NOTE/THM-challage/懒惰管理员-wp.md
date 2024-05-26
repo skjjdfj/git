@@ -39,3 +39,10 @@ gobuster dir -u http://10.10.126.250/ -w /usr/share/wordlists/dirbuster/director
 
 
 ## 什么是根标志？
+
+
+
+三次参考WP
+第一次找到文件changelog.txt
+第二次找到用户名manager（其实是密码Password123输成了password123导致登陆不进去）
+第三次提权，但是已经有想法了，但没实践，更改copy.sh文件的内容，把IP改成攻击机的IP

