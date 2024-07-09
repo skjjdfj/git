@@ -1,18 +1,22 @@
 # windows提权
 - [windows提权](#windows提权)
-  - [理论](#理论)
-    - [基础](#基础)
+- [理论](#理论)
+  - [THM基础](#thm基础)
     - [滥用服务错误配置](#滥用服务错误配置)
     - [滥用危险的特权](#滥用危险的特权)
     - [滥用易受攻击的软件](#滥用易受攻击的软件)
     - [其他提权工具](#其他提权工具)
+  - [HTB基础](#htb基础)
+    - [工具](#工具)
+    - [态势感知](#态势感知)
+    - [初始枚举](#初始枚举)
   - [实战](#实战)
     - [命令\&工具](#命令工具)
     - [SAM文件](#sam文件)
 
-## 理论
+# 理论
 
-### 基础
+## THM基础
 
 >反shell
 
@@ -163,11 +167,76 @@ C:\> msiexec /quiet /qn /i C:\Windows\Temp\malicious.msi
 
 如果目标系统上已有 Meterpreter shell，则可以使用该multi/recon/local_exploit_suggester模块列出可能影响目标系统的漏洞，并允许您提升目标系统上的权限。
 
+## HTB基础
+
+Windows 系统存在巨大的攻击面。我们可以提升权限的一些方法包括：
+
+- 滥用 Windows 组权限	
+- 滥用 Windows 用户权限
+- 绕过用户帐户控制	
+- 滥用弱服务/文件权限
+- 利用未修补的内核漏洞	
+- 凭据盗窃
+- 流量捕获	
+
+### 工具
+
+下面是HTBA提供的工具：
+- Seatbelt	 
+- winPEAS	
+- PowerUp	
+- SharpUp	
+- JAWS	
+- SessionGopher	
+- Watson	
+- LaZagne	
+- Windows Exploit Suggester - Next Generation
+- Sysinternals Suite
+
+### 态势感知
+
+**网络信息**
+
+接口、IP 地址、DNS 信息:
+```
+ipconfig /all
+```
+
+arp表：
+```
+arp -a
+```
+
+路由表：
+```
+route print
+```
+
+检查 Windows Defender 状态:
+```powershell
+Get-MpComputerStatus
+```
+
+列出 AppLocker 规则:
+```powershell
+Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+```
+
+测试 AppLocker 策略：
+```powershell
+Get-AppLockerPolicy -Local | Test-AppLockerPolicy -path C:\Windows\System32\cmd.exe -User Everyone
+```
+
+### 初始枚举
+
+
+
+
 ## 实战
 
 ### 命令&工具
 
->sc
+
 
 查询服务：  
 sc qc <服务名称>
