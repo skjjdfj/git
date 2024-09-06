@@ -9,6 +9,8 @@
   - [钓鱼](#钓鱼)
   - [安全运营与监控](#安全运营与监控)
     - [端点安全监控](#端点安全监控)
+  - [流量分析](#流量分析)
+    - [wireshark](#wireshark)
 
 
 
@@ -68,3 +70,12 @@ Windows 初始化进程 （wininit.exe） 负责在会话 0 中启动 services.e
 >winlogon.exe
 
 >explorer.exe
+
+## 流量分析
+
+### wireshark
+
+**https添加密钥日志文件**
+
+“右键单击”菜单或“编辑 -->首选项 --> 协议 --> TLS”菜单添加/删除密钥日志文件(add/remove key log files)。
+

