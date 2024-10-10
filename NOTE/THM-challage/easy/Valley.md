@@ -126,3 +126,38 @@ PORT      STATE SERVICE    VERSION
 ftp登陆密码与之前网页的登陆密码相同，里面有三个数据包，需要wireshark分析：
 ![Alt text](../../../picture/THM/TheValley/Snipaste_2024-09-06_19-38-39.png)
 
+密码在siemHTTP2.pcapng这个数据包里：
+![Alt text](../../../picture/THM/TheValley/Snipaste_2024-09-08_09-40-12.png)
+uname:valleyDev
+psw:ph0t0s1234
+
+ssh进入目标系统：
+![Alt text](../../../picture/THM/TheValley/Snipaste_2024-09-08_09-48-13.png)
+
+user.txt:
+![Alt text](../../../picture/THM/TheValley/Snipaste_2024-09-08_09-48-13.png)
+
+## 提权
+
+/home文件夹下有一个可执行文件
+
+查一下有没有壳：
+![Alt text](../../../picture/THM/TheValley/Snipaste_2024-09-15_16-11-16.png)
+
+用upx脱壳：
+![Alt text](../../../picture/THM/TheValley/Snipaste_2024-09-15_16-13-40.png)
+
+用ida反编译脱壳后的文件，发现一串像hash字符：
+![Alt text](../../../picture/THM/TheValley/Snipaste_2024-09-15_16-14-37.png)
+e6722920bab2326f8217e4bf6b1b58ac
+用hash查找网站解一下：
+![Alt text](../../../picture/THM/TheValley/Snipaste_2024-09-15_16-16-47.png)
+e6722920bab2326f8217e4bf6b1b58ac:liberty123
+dd2921cc76ee3abfd2beb60709056cfb:valley
+
+登陆一下：
+![Alt text](../../../picture/THM/TheValley/Snipaste_2024-09-15_16-19-00.png)
+![Alt text](../../../picture/THM/TheValley/Snipaste_2024-09-15_16-20-21.png)
+成功
+
+

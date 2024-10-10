@@ -1,3 +1,68 @@
+# windows提权-HTBA
+
+Windows 系统存在巨大的攻击面。我们可以提升权限的一些方法包括：
+
+- 滥用 Windows 组权限	
+- 滥用 Windows 用户权限
+- 绕过用户帐户控制	
+- 滥用弱服务/文件权限
+- 利用未修补的内核漏洞	
+- 凭据盗窃
+- 流量捕获	
+
+# 工具
+
+下面是HTBA提供的工具：
+- Seatbelt	 
+- winPEAS	
+- PowerUp	
+- SharpUp	
+- JAWS	
+- SessionGopher	
+- Watson	
+- LaZagne	
+- Windows Exploit Suggester - Next Generation
+- Sysinternals Suite
+
+# 态势感知
+
+### 网络信息
+
+接口、IP 地址、DNS 信息:
+```
+ipconfig /all
+```
+
+arp表：
+```
+arp -a
+```
+
+路由表：
+```
+route print
+```
+
+检查 Windows Defender 状态:
+```powershell
+Get-MpComputerStatus
+```
+
+列出 AppLocker 规则:
+```powershell
+Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+```
+
+测试 AppLocker 策略：
+```powershell
+Get-AppLockerPolicy -Local | Test-AppLockerPolicy -path C:\Windows\System32\cmd.exe -User Everyone
+```
+
+### 初始枚举
+
+
+
+
 # windows组权限
 
 # windows内置组
@@ -111,4 +176,32 @@ The operation completed successfully.
 
 
 ## Event Log Readers事件日志读取器
+
+攻击者常用的命令：https://blogs.jpcert.or.jp/en/2016/01/windows-commands-abused-by-attackers.html
+
+确认组成员资格：
+```
+net localgroup "Event Log Readers"
+```
+
+使用 wevtutil 搜索安全日志:
+```
+wevtutil qe Security /rd:true /f:text | Select-String "/user"
+```
+我们还可以使用参数 /u 和 /p 为 wevtutil 指定备用凭据。
+
+将凭证传递给 wevtutil:
+```
+wevtutil qe Security /rd:true /f:text /r:share01 /u:julie.clay /p:Welcome1 | findstr "/user"
+```
+
+使用 Get-WinEvent 搜索安全日志:
+```
+Get-WinEvent -LogName security | where { $_.ID -eq 4688 -and $_.Properties[8].Value -like '*/user*'} | Select-Object @{name='CommandLine';expression={ $_.Properties[8].Value }}
+```
+注意：使用 Get-WInEvent 搜索安全事件日志需要管理员访问权限或对注册表项 HKLM\System\CurrentControlSet\Services\Eventlog\Security 调整的权限。仅 Event Log Readers 组中的成员身份是不够的。
+该 cmdlet 还可以以具有 -Credential 参数的其他用户身份运行。
+
+
+## DnsAdmins Dns管理员
 

